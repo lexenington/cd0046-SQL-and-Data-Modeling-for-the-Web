@@ -70,6 +70,25 @@ class Venue(db.Model):
             'upcoming_shows_count': len(self.upcoming_shows)
 
         }
+
+    @property
+    def serialize_for_edit(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'city': self.city,
+            'state': self.state,
+            'address': self.address,
+            'phone': self.phone,
+            'image_link': self.image_link,
+            'facebook_link': self.facebook_link,
+            'genres': self.genres,
+            'website': self.website,
+            'seeking_talent': self.seeking_talent,
+            'seeking_description': self.seeking_description,
+            'shows': self.shows
+
+        }
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
 class Artist(db.Model):
@@ -90,6 +109,61 @@ class Artist(db.Model):
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
+    @property
+    def serialize_artists(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'city': self.city,
+            'state': self.state,
+            'phone': self.phone,
+            'genres': self.genres,
+            'image_link': self.image_link,
+            'website': self.website,
+            'facebook_link': self.facebook_link,
+            'seeking_venue': self.seeking_venue,
+            'seeking_description': self.seeking_description,
+            'past_shows': self.past_shows,
+            'upcoming_shows': self.upcoming_shows,
+            'past_shows_count': len(self.past_shows),
+            'upcoming_shows_count': len(self.upcoming_shows)
+        }
+
+    @property
+    def serialize_for_edit(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'city': self.city,
+            'state': self.state,
+            'phone': self.phone,
+            'genres': self.genres,
+            'image_link': self.image_link,
+            'website': self.website,
+            'facebook_link': self.facebook_link,
+            'seeking_venue': self.seeking_venue,
+            'seeking_description': self.seeking_description,
+            'shows': self.shows,
+        }
+
+    @property
+    def upcoming_shows(self):
+        # TODO: get up coiming shows functionality
+        coming_shows = Show.query.filter(Show.start_time > datetime.now(), Show.artist_id == self.id).all()
+        return coming_shows
+
+    @property
+    def past_shows(self):
+        previous_shows = Show.query.filter(Show.start_time < datetime.now(), Show.artist_id == self.id).all()
+        return previous_shows
+
+    @property
+    def artist_summary(self):
+        # TODO: make venues list id, venue name and coming shows
+        return {'id': self.id,
+                'name': self.name,
+                'num_upcoming_shows': len(self.upcoming_shows)}
+
 # TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
 
 class Show(db.Model):
@@ -102,3 +176,14 @@ class Show(db.Model):
 
     def __repr__(self):
         return f'{self.artist_id}, {self.start_time}'
+
+    @property
+    def serialize_shows(self):
+        return {
+            'venue_id': self.venue_id,
+            'venue_name': self.venue.name,
+            'artist_id': self.artist_id,
+            'artist_name': self.artist.name,
+            'artist_image_link': self.artist.image_link,
+            'start_time': self.start_time
+        }

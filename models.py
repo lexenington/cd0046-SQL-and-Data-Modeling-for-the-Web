@@ -15,14 +15,14 @@ class Venue(db.Model):
     __tablename__ = 'venues'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+    name = db.Column(db.String(120))
     city = db.Column(db.String(120))
     state = db.Column(db.String(120))
     address = db.Column(db.String(120))
     phone = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
-    genres = db.Column(db.String)
+    genres = db.Column(db.ARRAY(db.String(120)))
     website = db.Column(db.String(250))
     seeking_talent = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(500), nullable=True)
@@ -30,6 +30,12 @@ class Venue(db.Model):
 
     def __repr__(self):
         return f'<{self.id}, {self.name}>'
+
+    @property
+    def genres_list(self):
+        genres = self.genres[1:-1]
+        return''.join(genres).split(',')
+
 
     @property
     def upcoming_shows(self):
@@ -99,7 +105,7 @@ class Artist(db.Model):
     city = db.Column(db.String(120))
     state = db.Column(db.String(120))
     phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
+    genres = db.Column(db.ARRAY(db.String(120)))
     image_link = db.Column(db.String(500))
     website = db.Column(db.String(250))
     facebook_link = db.Column(db.String(120))
@@ -109,6 +115,11 @@ class Artist(db.Model):
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
+    @property
+    def genres_list(self):
+        genres = self.genres[1:-1]
+        return''.join(genres).split(',')
+        
     @property
     def serialize_artists(self):
         return {

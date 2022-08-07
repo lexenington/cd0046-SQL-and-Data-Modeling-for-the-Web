@@ -10,7 +10,7 @@
 			ID: {{ venue.id }}
 		</p>
 		<div class="genres">
-			{% for genre in venue.genres %}
+			{% for genre in venue.genres_list %}
 			<span class="genre">{{ genre }}</span>
 			{% endfor %}
 		</div>
@@ -76,7 +76,7 @@
 </section>
 
 <a href="/venues/{{ venue.id }}/edit"><button class="btn btn-primary btn-lg">Edit</button></a>
-<a href="/venues/{{ venue.id }}/delete"><button class="btn btn-danger btn-lg" onclick="return confirm('Are you sure you want to delete this item?');"">Delete</button></a>
+<a href="/venues/{{ venue.id }}/delete"><button class="btn btn-danger btn-lg">Delete</button></a>
 
 {% endblock %}
 
